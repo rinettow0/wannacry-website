@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBERSECURITY ARCHIVE — WannaCry 2017</title>
+<meta name="description" content="An educational deep-dive into the 2017 WannaCry ransomware attack: background, analysis, global impact, and prevention.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loader" class="loader">
+  <div class="loader-inner">
+    <div class="loader-ring"></div>
+    <div class="loader-text" data-text="DECRYPTING">DECRYPTING</div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-pct">0%</div>
+  </div>
+</div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress"><span id="scrollBar"></span></div>
+
+<!-- MATRIX RAIN (global faint) -->
+<canvas id="matrix"></canvas>
+
+<!-- HEADER -->
+<header id="header" class="header">
+  <div class="nav-wrap">
+    <a href="#home" class="logo">
+      <span class="logo-mark"><i class="fa-solid fa-shield-halved"></i></span>
+      <span class="logo-txt">CYBERSECURITY<strong>ARCHIVE</strong></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#home" class="nav-link active">HOME</a>
+      <a href="#intro" class="nav-link">INTRODUCTION</a>
+      <a href="#background" class="nav-link">BACKGROUND</a>
+      <a href="#analysis" class="nav-link">ATTACK ANALYSIS</a>
+      <a href="#impact" class="nav-link">IMPACT</a>
+      <a href="#prevention" class="nav-link">PREVENTION</a>
+      <a href="#conclusion" class="nav-link">CONCLUSION</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="hero-grid"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge reveal"><span class="pulse-dot"></span> THREAT REPORT · MAY 2017</div>
+    <h1 class="hero-title glitch" data-text="WANNACRY">WANNACRY</h1>
+    <p class="hero-sub reveal">THE ATTACK THAT SHOOK THE WORLD</p>
+    <p class="hero-desc reveal">In May 2017, one ransomware attack spread across the globe, affecting hundreds of thousands of computers and exposing critical weaknesses in global cybersecurity.</p>
+    <div class="hero-btns reveal">
+      <a href="#analysis" class="btn btn-primary"><span>EXPLORE THE ATTACK</span><i class="fa-solid fa-arrow-right"></i></a>
+      <a href="#prevention" class="btn btn-ghost"><span>LEARN HOW TO STAY SAFE</span><i class="fa-solid fa-shield"></i></a>
+    </div>
+    <div class="hero-stats reveal">
+      <div><b class="counter" data-target="200000" data-suffix="+">0</b><small>Computers hit</small></div>
+      <div><b class="counter" data-target="150" data-suffix="+">0</b><small>Countries</small></div>
+      <div><b class="counter" data-target="4" data-prefix="$" data-suffix="B">0</b><small>Est. damage</small></div>
+    </div>
+  </div>
+  <a href="#intro" class="scroll-cue"><span></span>SCROLL</a>
+</section>
+
+<!-- INTRODUCTION -->
+<section id="intro" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">01 / INTRODUCTION</span>
+      <h2 class="sec-title">WHAT WAS <span class="grad">WANNACRY</span>?</h2>
+    </div>
+    <div class="two-col">
+      <div class="col-text reveal-left">
+<p>WannaCry was a self-spreading <strong>ransomware worm</strong> that erupted on <strong>12 May 2017</strong>. Within a single day it encrypted files on an estimated <strong>200,000+ computers across more than 150 countries</strong>, demanding payment in Bitcoin to restore access.</p>
+        <p>Ransomware is malicious software that locks a victim's files using strong encryption. The attacker then displays a ransom note demanding money in exchange for the decryption key. What made WannaCry exceptional was that it did not rely on a user clicking a bad link — it <strong>spread automatically</strong> from machine to machine across networks.</p>
+        <p>The incident became globally significant because it struck hospitals, factories, railways and telecom providers at once, proving how a single unpatched vulnerability can cascade into a worldwide crisis.</p>
+        <div class="code-card">
+          <div class="code-head"><span></span><span></span><span></span> ransom_note.txt</div>
+          <pre><code><span class="c-red">!!! Ooops, your files have been encrypted !!!</span>
+> Send $300 worth of Bitcoin to this address.
+> Payment doubles after 3 days.
+> Files deleted after 7 days.
+<span class="c-dim"># — WannaCry ransom screen, May 2017</span></code></pre>
+        </div>
+      </div>
+      <div class="col-cards reveal-right">
+        <div class="glass-card tilt">
+          <i class="fa-solid fa-lock icon-neon"></i>
+          <h3>Encryption</h3>
+          <p>Used AES + RSA to lock documents, photos and databases, appending the <em>.WNCRY</em> extension.</p>
+        </div>
+        <div class="glass-card tilt">
+          <i class="fa-solid fa-worm icon-blue"></i>
+          <h3>Worm Behaviour</h3>
+          <p>Scanned local and internet networks for vulnerable machines and infected them without any human action.</p>
+        </div>
+        <div class="glass-card tilt">
+          <i class="fa-brands fa-bitcoin icon-neon"></i>
+          <h3>Ransom</h3>
+          <p>Demanded $300–$600 in Bitcoin, with a countdown timer pressuring victims to pay quickly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BACKGROUND + TIMELINE -->
+<section id="background" class="section section-alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">02 / BACKGROUND</span>
+      <h2 class="sec-title">THE STORY BEHIND <span class="grad">THE ATTACK</span></h2>
+      <p class="sec-lead">WannaCry was powered by a leaked cyber-weapon. Understanding its origins reveals why patching matters.</p>
+    </div>
+
+    <div class="bg-cards">
+      <div class="glass-card tilt reveal-up"><i class="fa-brands fa-windows icon-blue"></i><h3>Windows SMBv1 Flaw</h3><p>A vulnerability in the old Server Message Block (SMBv1) file-sharing protocol let code execute remotely on Windows systems.</p></div>
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-bomb icon-neon"></i><h3>EternalBlue</h3><p>An exploit originally developed by the U.S. NSA that weaponised the SMBv1 flaw to break into machines silently.</p></div>
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-user-secret icon-blue"></i><h3>The Shadow Brokers</h3><p>A hacking group that stole and publicly leaked NSA exploits, including EternalBlue, in April 2017.</p></div>
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-screwdriver-wrench icon-neon"></i><h3>MS17-010 Patch</h3><p>Microsoft had already released a fix on 14 March 2017 — but countless systems remained unpatched.</p></div>
+    </div>
+
+    <h3 class="timeline-title reveal">INTERACTIVE TIMELINE</h3>
+    <div class="timeline">
+      <div class="tl-line"><span id="tlFill"></span></div>
+      <div class="tl-item reveal-up">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass-card">
+          <span class="tl-date">14 MAR 2017</span>
+          <h4>Microsoft Releases MS17-010</h4>
+          <p>A critical security update patches the SMBv1 vulnerability, two months before the outbreak.</p>
+        </div>
+      </div>
+<div class="tl-item reveal-up">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass-card">
+          <span class="tl-date">14 APR 2017</span>
+          <h4>Shadow Brokers Leak EternalBlue</h4>
+          <p>Stolen NSA hacking tools are published online, placing a powerful exploit in public hands.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal-up">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass-card">
+          <span class="tl-date">12 MAY 2017</span>
+          <h4>Outbreak Begins</h4>
+          <p>WannaCry spreads worldwide in hours. The UK's NHS is among the first major victims to go public.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal-up">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass-card">
+          <span class="tl-date">12 MAY 2017</span>
+          <h4>Kill Switch Discovered</h4>
+          <p>Researcher Marcus Hutchins registers a hard-coded domain, dramatically slowing the spread.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal-up">
+        <div class="tl-dot"></div>
+        <div class="tl-card glass-card">
+          <span class="tl-date">15 MAY 2017+</span>
+          <h4>Global Clean-up</h4>
+          <p>Organisations rush to patch systems. Investigations and attribution efforts begin worldwide.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ATTACK ANALYSIS -->
+<section id="analysis" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">03 / ATTACK ANALYSIS</span>
+      <h2 class="sec-title">HOW THE <span class="grad">ATTACK WORKED</span></h2>
+      <p class="sec-lead">A defensive, educational breakdown of the six stages — how the worm moved and why it was so destructive.</p>
+    </div>
+    <div class="stage-grid">
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">01</span><i class="fa-solid fa-door-open"></i>
+        <h3>Vulnerability Exploitation</h3>
+        <p>The worm located machines running unpatched SMBv1 and used the EternalBlue exploit to gain entry without credentials.</p>
+      </article>
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">02</span><i class="fa-solid fa-network-wired"></i>
+        <h3>Network Propagation</h3>
+        <p>Once inside, it scanned local and internet-facing networks, copying itself to every reachable vulnerable host.</p>
+      </article>
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">03</span><i class="fa-solid fa-download"></i>
+        <h3>Ransomware Installation</h3>
+        <p>The payload installed itself as a service so it could persist and run with high privileges on the system.</p>
+      </article>
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">04</span><i class="fa-solid fa-file-shield"></i>
+        <h3>File Encryption</h3>
+        <p>Documents, images and databases were encrypted with strong cryptography and renamed with a .WNCRY extension.</p>
+      </article>
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">05</span><i class="fa-solid fa-sack-dollar"></i>
+        <h3>Ransom Demand</h3>
+        <p>A lock screen demanded $300–$600 in Bitcoin, with a countdown threatening permanent data loss.</p>
+      </article>
+      <article class="stage-card tilt reveal-up">
+        <span class="stage-num">06</span><i class="fa-solid fa-virus-covid"></i>
+        <h3>Further Infection</h3>
+        <p>Each infected machine became a new launch point, allowing the worm to keep spreading automatically.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- GLOBAL IMPACT -->
+<section id="impact" class="section section-alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">04 / GLOBAL IMPACT</span>
+      <h2 class="sec-title">A GLOBAL <span class="grad">CYBERSECURITY CRISIS</span></h2>
+    </div>
+
+    <div class="stat-grid">
+<div class="stat-card tilt reveal-up"><i class="fa-solid fa-computer icon-neon"></i><b class="counter" data-target="200000" data-suffix="+">0</b><span>Computers affected</span></div>
+      <div class="stat-card tilt reveal-up"><i class="fa-solid fa-earth-americas icon-blue"></i><b class="counter" data-target="150" data-suffix="+">0</b><span>Countries impacted</span></div>
+      <div class="stat-card tilt reveal-up"><i class="fa-solid fa-hospital icon-neon"></i><b class="counter" data-target="80">0</b><span>NHS organisations hit</span></div>
+      <div class="stat-card tilt reveal-up"><i class="fa-solid fa-coins icon-blue"></i><b class="counter" data-target="4" data-prefix="$" data-suffix="B">0</b><span>Estimated global damage</span></div>
+    </div>
+
+    <div class="map-wrap reveal-up">
+      <h3 class="map-title">GLOBAL SPREAD</h3>
+      <div class="world-map">
+        <svg viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" class="map-svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="dotGrad"><stop offset="0%" stop-color="#00FF9C"/><stop offset="100%" stop-color="#00BFFF"/></radialGradient>
+          </defs>
+          <g class="map-dots">
+            <circle class="mk" cx="480" cy="150" r="5"/><!-- UK -->
+            <circle class="mk" cx="520" cy="160" r="5"/><!-- EU -->
+            <circle class="mk" cx="700" cy="180" r="5"/><!-- Russia -->
+            <circle class="mk" cx="780" cy="230" r="5"/><!-- China -->
+            <circle class="mk" cx="820" cy="300" r="5"/><!-- SE Asia -->
+            <circle class="mk" cx="250" cy="200" r="5"/><!-- US -->
+            <circle class="mk" cx="320" cy="340" r="5"/><!-- S.America -->
+            <circle class="mk" cx="540" cy="330" r="5"/><!-- Africa -->
+            <circle class="mk" cx="560" cy="220" r="5"/><!-- Mid East -->
+            <circle class="mk" cx="870" cy="400" r="5"/><!-- Australia -->
+            <circle class="mk" cx="720" cy="250" r="5"/><!-- India -->
+            <circle class="mk" cx="300" cy="150" r="5"/><!-- Canada -->
+          </g>
+        </svg>
+        <p class="map-note">Markers are illustrative of the attack's worldwide reach across 150+ countries.</p>
+      </div>
+    </div>
+
+    <div class="impact-cards">
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-hospital icon-neon"></i><h3>Healthcare Disruption</h3><p>Hospitals cancelled appointments and surgeries; some diverted emergency patients when systems went dark.</p></div>
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-industry icon-blue"></i><h3>Business Interruption</h3><p>Factories and offices halted operations as workstations and shared drives were locked.</p></div>
+      <div class="glass-card tilt reveal-up"><i class="fa-solid fa-chart-line icon-neon"></i><h3>Financial Damage</h3><p>Clean-up, downtime and lost productivity contributed to damage estimates reaching into the billions.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- AFFECTED INDUSTRIES GALLERY -->
+<section id="industries" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">05 / AFFECTED INDUSTRIES</span>
+      <h2 class="sec-title">WHO WAS <span class="grad">AFFECTED</span>?</h2>
+    </div>
+    <div class="gallery">
+      <figure class="g-item reveal-up" style="--img:url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=70')">
+        <div class="g-overlay"><i class="fa-solid fa-hospital"></i><h3>Healthcare</h3><p>The UK's NHS was severely hit — around 80 trusts and many GP practices disrupted, delaying patient care.</p></div>
+      </figure>
+      <figure class="g-item reveal-up" style="--img:url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=900&q=70')">
+        <div class="g-overlay"><i class="fa-solid fa-train"></i><h3>Transportation</h3><p>Rail and logistics operators reported disruption to display boards and internal systems.</p></div>
+      </figure>
+<figure class="g-item reveal-up" style="--img:url('https://images.unsplash.com/photo-1562408590-e32931084e23?auto=format&fit=crop&w=900&q=70')">
+        <div class="g-overlay"><i class="fa-solid fa-tower-cell"></i><h3>Telecommunications</h3><p>Major telecom providers saw workstations locked, affecting internal operations and services.</p></div>
+      </figure>
+      <figure class="g-item reveal-up" style="--img:url('https://images.unsplash.com/photo-1565514020179-026b92b84bb6?auto=format&fit=crop&w=900&q=70')">
+        <div class="g-overlay"><i class="fa-solid fa-industry"></i><h3>Business & Industry</h3><p>Car plants and manufacturers paused production lines reliant on infected Windows machines.</p></div>
+      </figure>
+      <figure class="g-item reveal-up wide" style="--img:url('https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=70')">
+        <div class="g-overlay"><i class="fa-solid fa-landmark"></i><h3>Government Services</h3><p>Public-sector bodies and ministries in several countries faced outages across essential services.</p></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- PREVENTION -->
+<section id="prevention" class="section section-alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">06 / PREVENTION</span>
+      <h2 class="sec-title">HOW COULD THIS HAVE <span class="grad">BEEN PREVENTED</span>?</h2>
+      <p class="sec-lead">A professional protection checklist. Most WannaCry infections were preventable with basic cyber-hygiene.</p>
+    </div>
+    <div class="prevent-grid">
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-rotate"></i><h3>OS Updates</h3><p>Keep operating systems current so known flaws are closed quickly.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-shield-halved"></i><h3>Security Patches</h3><p>Apply critical patches like MS17-010 without delay.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-database"></i><h3>Regular Backups</h3><p>Keep offline, tested backups so you can recover without paying.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-bug-slash"></i><h3>Endpoint Protection</h3><p>Use reputable antivirus/EDR to detect and block malware.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-diagram-project"></i><h3>Network Segmentation</h3><p>Divide networks so one infection cannot reach everything.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-plug-circle-xmark"></i><h3>Disable SMBv1</h3><p>Turn off the obsolete SMBv1 protocol that WannaCry abused.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-user-graduate"></i><h3>Staff Awareness</h3><p>Train employees to spot phishing and report incidents fast.</p></div>
+      <div class="prevent-card tilt reveal-up"><i class="fa-solid fa-fire"></i><h3>Firewall Config</h3><p>Block risky ports (e.g. 445) at the network boundary.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist" class="section">
+  <div class="container narrow">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">07 / SELF-ASSESSMENT</span>
+      <h2 class="sec-title">ARE YOU PROTECTED FROM <span class="grad">RANSOMWARE</span>?</h2>
+    </div>
+    <div class="check-wrap glass-card reveal-up">
+      <div class="check-gauge">
+        <div class="gauge-ring">
+          <svg viewBox="0 0 120 120"><circle class="g-bg" cx="60" cy="60" r="52"/><circle id="gaugeArc" class="g-fg" cx="60" cy="60" r="52"/></svg>
+          <div class="gauge-center"><span id="checkPct">0%</span><small id="checkStatus">AT RISK</small></div>
+        </div>
+      </div>
+      <div class="check-list" id="checkList">
+        <label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Is your operating system updated?</label>
+<label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Do you have regular backups?</label>
+        <label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Is antivirus protection enabled?</label>
+        <label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Do you avoid suspicious email attachments?</label>
+        <label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Is your firewall enabled?</label>
+        <label class="check-item"><input type="checkbox"><span class="box"><i class="fa-solid fa-check"></i></span>Do you use strong passwords?</label>
+        <div class="check-bar"><span id="checkBar"></span></div>
+        <button class="btn btn-ghost" id="checkReset"><i class="fa-solid fa-rotate-left"></i><span>RESET</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LESSONS LEARNED -->
+<section id="lessons" class="section section-alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">08 / LESSONS LEARNED</span>
+      <h2 class="sec-title">WHAT DID WANNACRY <span class="grad">TEACH THE WORLD</span>?</h2>
+    </div>
+    <div class="lessons">
+      <div class="lesson reveal-left"><span class="l-num">01</span><div><h3>Updates Are Critical</h3><p>A patch existed two months before the attack. Timely updates would have stopped most infections.</p></div></div>
+      <div class="lesson reveal-right"><span class="l-num">02</span><div><h3>Backups Are Essential</h3><p>Organisations with clean, offline backups could restore data instead of paying a ransom.</p></div></div>
+      <div class="lesson reveal-left"><span class="l-num">03</span><div><h3>Strategy Beats Chaos</h3><p>Clear incident-response plans let teams react fast instead of improvising under pressure.</p></div></div>
+      <div class="lesson reveal-right"><span class="l-num">04</span><div><h3>People Matter</h3><p>Aware employees are a strong line of defence against phishing and social engineering.</p></div></div>
+      <div class="lesson reveal-left"><span class="l-num">05</span><div><h3>Prevention Over Recovery</h3><p>Preventing an incident is far cheaper and safer than cleaning one up afterwards.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion" class="section conclusion">
+  <div class="conc-glow"></div>
+  <div class="container narrow">
+    <span class="sec-kicker reveal">09 / CONCLUSION</span>
+    <h2 class="conc-statement reveal">ONE UNPATCHED SYSTEM CAN PUT AN <span class="grad">ENTIRE NETWORK</span> AT RISK.</h2>
+    <p class="conc-text reveal">WannaCry was a wake-up call for the digital world. A single leaked exploit, combined with unpatched machines, caused a global crisis within hours — paralysing hospitals, factories and public services. Its true lesson is timeless: cybersecurity is a shared responsibility, and basic discipline — patching, backups, and awareness — is the strongest shield against even the most advanced threats.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-grid"></div>
+  <div class="cta-glow"></div>
+  <div class="container narrow cta-inner reveal-up">
+    <h2 class="cta-head">STAY INFORMED.<br>STAY UPDATED.<br><span class="grad">STAY SECURE.</span></h2>
+    <a href="#prevention" class="btn btn-primary btn-lg"><span>REVIEW SECURITY TIPS</span><i class="fa-solid fa-shield-halved"></i></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="f-col">
+      <a href="#home" class="logo"><span class="logo-mark"><i class="fa-solid fa-shield-halved"></i></span><span class="logo-txt">CYBERSECURITY<strong>ARCHIVE</strong></span></a>
+      <p class="f-about">An educational project documenting the 2017 WannaCry ransomware attack — its origins, impact and the cyber-hygiene lessons it taught the world.</p>
+    </div>
+    <div class="f-col">
+<h4>NAVIGATE</h4>
+      <a href="#home">Home</a><a href="#intro">Introduction</a><a href="#background">Background</a>
+      <a href="#analysis">Attack Analysis</a><a href="#impact">Impact</a><a href="#prevention">Prevention</a>
+    </div>
+    <div class="f-col">
+      <h4>REFERENCES & SOURCES</h4>
+      <a href="https://msrc.microsoft.com/blog/2017/05/customer-guidance-for-wannacrypt-attacks/" target="_blank" rel="noopener">Microsoft Security Response Center</a>
+      <a href="https://www.cisa.gov/" target="_blank" rel="noopener">CISA — Cybersecurity &amp; Infrastructure Security Agency</a>
+      <a href="https://www.europol.europa.eu/" target="_blank" rel="noopener">Europol</a>
+      <a href="https://www.england.nhs.uk/" target="_blank" rel="noopener">NHS England Publications</a>
+    </div>
+    <div class="f-col">
+      <h4>DISCLAIMER</h4>
+      <p class="f-about">This website is for educational purposes only. It presents a defensive, historical analysis and contains no instructions for conducting attacks. Images are illustrative.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 CYBERSECURITY ARCHIVE · University Laboratory Project. All factual claims drawn from public reporting by Microsoft, CISA, Europol and NHS sources.</p>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="toTop" class="to-top" aria-label="Back to top"><i class="fa-solid fa-chevron-up"></i></button>
+
+<script src="script.js"></script>
+</body>
+</html>
